@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+
+/* 🎨 Moss–Oat–Olive Custom Colors */
+:root {
+  --color-moss: #31331f;
+  --color-oat: #d5cdbc;
+  --color-olive: #645d3b;
+}
+
+.bg-moss { background-color: var(--color-moss); }
+.bg-oat { background-color: var(--color-oat); }
+.bg-olive { background-color: var(--color-olive); }
+
+.text-moss { color: var(--color-moss); }
+.text-oat { color: var(--color-oat); }
+.text-olive { color: var(--color-olive); }
+
+.hero-gradient {
+  background: linear-gradient(360deg, var(--color-olive), var(--color-moss), var(--color-olive));
+}
