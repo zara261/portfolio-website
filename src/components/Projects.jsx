@@ -21,8 +21,8 @@ export default function Projects() {
     {
       title: "Portfolio Website",
       desc: "A modern personal portfolio built with React + Tailwind, showcasing my skills, projects, and resume.",
-      demo: "https://your-username.github.io/portfolio/",
-      repo: "https://github.com/your-username/portfolio",
+       demo: "https://zara261.github.io/portfolio-website/",
+      repo: "https://github.com/zara261/portfolio-website",
     },
     {
       title: "Oil Company Website",
