@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zara Batool — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#00ff41;--green2:#00cc33;--green3:#39ff14;
+  --cyan:#00ffff;--purple:#bf00ff;--red:#ff003c;
+  --dark:#000;--dark2:#050505;--dark3:#0a0a0a;--dark4:#0d0d0d;
+  --panel:#0a0f0a;--border:rgba(0,255,65,0.2);
+  --text:#c8ffc8;--muted:#4a7a4a;--glow:0 0 10px #00ff41,0 0 20px #00ff4166
+}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:16px;height:16px;border:2px solid var(--green);border-radius:0;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;transition:transform .1s;mix-blend-mode:screen}
+.cursor-trail{position:fixed;width:6px;height:6px;background:var(--green);transform:translate(-50%,-50%);pointer-events:none;z-index:9998;border-radius:0;opacity:.5;transition:all .08s}
+
+/* SCANLINE OVERLAY */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.015) 2px,rgba(0,255,65,0.015) 4px);pointer-events:none;z-index:9990;animation:scanMove 8s linear infinite}
+@keyframes scanMove{0%{background-position:0 0}100%{background-position:0 100vh}}
+
+/* MATRIX CANVAS */
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.07;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:900;color:var(--green);letter-spacing:4px;text-shadow:var(--glow);animation:logoFlicker 5s infinite}
+@keyframes logoFlicker{0%,96%,100%{opacity:1}97%{opacity:.4}98%{opacity:1}99%{opacity:.6}}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;transition:all .3s;position:relative}
+.nav-links a::before{content:'> ';color:var(--green);opacity:0;transition:.3s}
+.nav-links a:hover{color:var(--green);text-shadow:var(--glow)}
+.nav-links a:hover::before{opacity:1}
+.nav-cv-btn{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:2px;color:var(--green);border:1px solid var(--green);background:transparent;padding:.5rem 1.2rem;cursor:none;transition:all .3s;text-decoration:none;position:relative;overflow:hidden}
+.nav-cv-btn::before{content:'';position:absolute;inset:0;background:var(--green);transform:translateX(-100%);transition:transform .3s;z-index:-1}
+.nav-cv-btn:hover{color:#000;text-shadow:none}
+.nav-cv-btn:hover::before{transform:translateX(0)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:2rem;z-index:1}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,65,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.04) 1px,transparent 1px);background-size:50px 50px;animation:gridPulse 4s ease-in-out infinite}
+@keyframes gridPulse{0%,100%{opacity:.5}50%{opacity:1}}
+.glitch-container{position:relative;z-index:2;text-align:center}
+.boot-text{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--green);margin-bottom:2rem;opacity:0;animation:bootSeq 1.5s ease forwards}
+@keyframes bootSeq{from{opacity:0}to{opacity:1}}
+.boot-line{display:block;margin:.15rem 0;color:var(--muted)}
+.boot-line.ok{color:var(--green)}
+.boot-line.em{color:var(--cyan)}
+.hero-name{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,7vw,6rem);font-weight:900;letter-spacing:6px;line-height:1;position:relative;color:var(--green);text-shadow:0 0 20px #00ff41,0 0 40px #00ff4166,0 0 80px #00ff4133;animation:nameGlitch 6s infinite}
+@keyframes nameGlitch{
+  0%,90%,100%{text-shadow:0 0 20px #00ff41,0 0 40px #00ff4166;transform:none;color:var(--green)}
+  91%{text-shadow:-3px 0 var(--cyan),3px 0 var(--red);transform:translate(-2px,0);color:var(--green)}
+  92%{text-shadow:3px 0 var(--purple),-3px 0 var(--cyan);transform:translate(2px,0)}
+  93%{text-shadow:none;transform:none;color:var(--cyan)}
+  94%{color:var(--green);text-shadow:0 0 20px #00ff41}
+}
+.hero-sub{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--cyan);letter-spacing:4px;margin:.5rem 0 1rem;text-shadow:0 0 10px var(--cyan)}
+.typewriter{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--green);letter-spacing:2px;min-height:1.5rem;margin-bottom:2rem}
+.typewriter::after{content:'█';animation:blink .7s step-end infinite;color:var(--green)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.btn-hack{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;color:var(--green);border:1px solid var(--green);background:transparent;padding:.9rem 2rem;cursor:none;transition:all .3s;text-decoration:none;position:relative;overflow:hidden;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+.btn-hack::before{content:'';position:absolute;inset:0;background:var(--green);transform:translateX(-100%);transition:transform .35s;z-index:-1}
+.btn-hack:hover{color:#000;text-shadow:none;box-shadow:0 0 20px var(--green)}
+.btn-hack:hover::before{transform:translateX(0)}
+.btn-hack.cyan{color:var(--cyan);border-color:var(--cyan)}
+.btn-hack.cyan::before{background:var(--cyan)}
+.btn-hack.cyan:hover{box-shadow:0 0 20px var(--cyan)}
+.btn-hack.purple{color:var(--purple);border-color:var(--purple)}
+.btn-hack.purple::before{background:var(--purple)}
+.btn-hack.purple:hover{color:#fff;box-shadow:0 0 20px var(--purple)}
+
+/* STATS */
+.stats-bar{position:relative;z-index:1;background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 4rem;display:flex;justify-content:center;gap:5rem;flex-wrap:wrap}
+.stat{text-align:center;position:relative}
+.stat::after{content:'';position:absolute;bottom:-1rem;left:50%;transform:translateX(-50%);width:1px;height:1rem;background:var(--green);opacity:.3}
+.stat-num{font-family:'Orbitron',monospace;font-size:2.5rem;color:var(--green);font-weight:900;text-shadow:var(--glow)}
+.stat-label{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-top:.4rem}
+
+/* SECTIONS */
+section{padding:7rem 4rem;position:relative;z-index:1}
+.section-header{text-align:center;margin-bottom:5rem}
+.section-tag{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:4px;color:var(--muted);display:block;margin-bottom:.8rem}
+.section-tag::before{content:'// '}
+.section-title{font-family:'Orbitron',monospace;font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;color:var(--green);text-shadow:0 0 15px rgba(0,255,65,0.5);letter-spacing:4px}
+.section-line{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--green),transparent);margin:1.5rem auto 0}
+
+/* ABOUT */
+.about-section{background:var(--dark2)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto}
+.about-visual{position:relative}
+.terminal-box{border:1px solid var(--border);background:var(--panel);padding:0;overflow:hidden;position:relative}
+.terminal-bar{background:#111;padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border)}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.t-dot.r{background:#ff5f57}.t-dot.y{background:#ffbd2e}.t-dot.g{background:var(--green);box-shadow:0 0 6px var(--green)}
+.terminal-content{padding:1.5rem;font-family:'Share Tech Mono',monospace;font-size:.78rem;line-height:2;color:var(--text)}
+.t-prompt{color:var(--green)}.t-cmd{color:var(--cyan)}.t-out{color:var(--muted)}.t-val{color:var(--text)}.t-hi{color:var(--green)}
+.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(0,255,65,0.4),transparent);animation:scanVert 4s linear infinite;pointer-events:none}
+@keyframes scanVert{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+
+.about-text{color:#888;line-height:1.9;font-size:.9rem}
+.about-text p{margin-bottom:1.2rem;border-left:2px solid var(--border);padding-left:1rem}
+.about-text p:hover{border-left-color:var(--green)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1.5rem}
+.info-item{background:var(--panel);border:1px solid var(--border);padding:.8rem 1rem;transition:.3s}
+.info-item:hover{border-color:var(--green);box-shadow:0 0 10px rgba(0,255,65,.1)}
+.info-label{font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:2px;color:var(--green);margin-bottom:.3rem}
+.info-val{font-size:.8rem;color:var(--text)}
+
+/* SKILLS */
+.skills-section{background:var(--dark3)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;max-width:1100px;margin:0 auto;border:1px solid var(--border)}
+.skill-card{background:var(--panel);padding:2rem;transition:all .4s;position:relative;overflow:hidden;border:none}
+.skill-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,65,0.05),transparent);opacity:0;transition:.4s}
+.skill-card:hover::before{opacity:1}
+.skill-card:hover{background:#060f06}
+.skill-cat{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:3px;color:var(--cyan);margin-bottom:1.2rem}
+.skill-cat::before{content:'$ ';color:var(--green)}
+.skill-bar-wrap{margin-bottom:.8rem}
+.skill-bar-label{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.3rem}
+.skill-bar-label span:last-child{color:var(--green)}
+.skill-bar{height:3px;background:rgba(0,255,65,0.1);position:relative;overflow:hidden}
+.skill-bar-fill{height:100%;background:linear-gradient(to right,var(--green),var(--cyan));box-shadow:0 0 8px var(--green);width:0;transition:width 1.2s ease}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.skill-tag{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--green);border:1px solid rgba(0,255,65,0.25);padding:.2rem .6rem}
+
+/* EXPERIENCE */
+.exp-section{background:var(--dark2)}
+.exp-timeline{max-width:820px;margin:0 auto}
+.exp-item{background:var(--panel);border:1px solid var(--border);padding:2rem;margin-bottom:1.5rem;position:relative;opacity:0;transform:translateX(-30px);transition:all .6s ease;overflow:hidden}
+.exp-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green);box-shadow:0 0 10px var(--green)}
+.exp-item.visible{opacity:1;transform:translateX(0)}
+.exp-item:hover{border-color:rgba(0,255,65,0.4);box-shadow:0 0 20px rgba(0,255,65,0.05)}
+.exp-corner{position:absolute;top:.5rem;right:.5rem;font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:1px}
+.exp-period{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:2px;color:var(--cyan);margin-bottom:.5rem}
+.exp-role{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--green);margin-bottom:.3rem;letter-spacing:2px}
+.exp-company{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:1rem}
+.exp-points{list-style:none}
+.exp-points li{color:#777;font-size:.83rem;line-height:1.8;padding-left:1.5rem;position:relative;margin-bottom:.3rem}
+.exp-points li::before{content:'→';position:absolute;left:0;color:var(--green);font-size:.7rem}
+
+/* PROJECTS */
+.projects-section{background:var(--dark3)}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;max-width:1100px;margin:0 auto;border:1px solid var(--border)}
+.project-card{background:var(--panel);overflow:hidden;transition:all .4s;position:relative}
+.project-card:hover{background:#060f06}
+.project-card:hover .project-hover-line{transform:scaleX(1)}
+.project-hover-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--green),var(--cyan));transform:scaleX(0);transform-origin:left;transition:.4s}
+.project-img{height:150px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.project-img::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,65,0.03),transparent)}
+.project-body{padding:1.5rem}
+.project-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.project-tag{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:1px;color:var(--cyan);border:1px solid rgba(0,255,255,0.25);padding:.15rem .5rem}
+.project-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--green);margin-bottom:.6rem;letter-spacing:2px}
+.project-desc{font-size:.8rem;color:#666;line-height:1.7}
+
+/* CV SECTION */
+.cv-section{background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 4rem;text-align:center;position:relative;overflow:hidden;z-index:1}
+.cv-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,255,65,0.05) 0%,transparent 70%)}
+.cv-title{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:var(--green);text-shadow:var(--glow);letter-spacing:4px;margin-bottom:1rem}
+.cv-sub{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);margin-bottom:2.5rem;letter-spacing:2px}
+.cv-big-btn{font-family:'Share Tech Mono',monospace;font-size:.85rem;letter-spacing:3px;color:var(--green);border:1px solid var(--green);background:transparent;padding:1.2rem 3rem;cursor:none;transition:all .4s;text-decoration:none;display:inline-flex;align-items:center;gap:1rem;position:relative;overflow:hidden;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%)}
+.cv-big-btn::before{content:'';position:absolute;inset:0;background:var(--green);transform:translateX(-100%);transition:.4s;z-index:-1}
+.cv-big-btn:hover{color:#000;text-shadow:none;box-shadow:0 0 30px var(--green),0 0 60px rgba(0,255,65,.3)}
+.cv-big-btn:hover::before{transform:translateX(0)}
+
+/* CONTACT */
+.contact-section{background:var(--dark2);z-index:1}
+.contact-wrapper{max-width:700px;margin:0 auto;text-align:center}
+.contact-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:3rem}
+.contact-link{display:flex;align-items:center;gap:.7rem;border:1px solid var(--border);background:var(--panel);padding:1rem 1.5rem;color:var(--text);text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.72rem;transition:all .3s;letter-spacing:1px}
+.contact-link:hover{border-color:var(--green);color:var(--green);box-shadow:0 0 15px rgba(0,255,65,.15);transform:translateY(-2px)}
+.contact-icon{color:var(--green)}
+.contact-desc{color:#555;font-family:'Share Tech Mono',monospace;font-size:.78rem;line-height:1.9;margin-top:1.5rem;letter-spacing:1px}
+
+/* FOOTER */
+footer{padding:2rem 4rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:var(--dark);z-index:1;position:relative}
+.footer-left,.footer-right{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1px}
+.footer-right span{color:var(--green)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* GLITCH TEXT UTILITY */
+@keyframes glitchClip1{
+  0%,100%{clip-path:inset(0 0 98% 0)}
+  25%{clip-path:inset(30% 0 50% 0)}
+  50%{clip-path:inset(60% 0 20% 0)}
+  75%{clip-path:inset(10% 0 80% 0)}
+}
+
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links,.nav-cv-btn{display:none}
+  section{padding:5rem 1.5rem}
+  .about-grid,.stats-bar{grid-template-columns:1fr;gap:2rem;padding:2rem 1.5rem}
+  .cv-section{padding:3rem 1.5rem}
+  footer{padding:1.5rem}
+}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="trail"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ZB://</div>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#experience">exp</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+  <a href="#" class="nav-cv-btn" id="navCv">⬇ cv.download</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="glitch-container">
+    <div class="boot-text">
+      <span class="boot-line ok">[  OK  ] Loaded kernel modules</span>
+      <span class="boot-line ok">[  OK  ] Started portfolio.service</span>
+      <span class="boot-line em">[  >>  ] User: zara_batool identified</span>
+      <span class="boot-line ok">[  OK  ] Initializing interface...</span>
+    </div>
+    <h1 class="hero-name">ZARA BATOOL</h1>
+    <p class="hero-sub">[ FULL STACK DEVELOPER // INSTRUCTOR ]</p>
+    <div class="typewriter" id="typewriter"></div>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-hack">view_work()</a>
+      <a href="#contact" class="btn-hack cyan">contact.me()</a>
+      <a href="#" class="btn-hack purple" id="heroCv">⬇ download_cv()</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" data-count="5" data-suffix="+">0</div><div class="stat-label">// years_active</div></div>
+  <div class="stat"><div class="stat-num" data-count="15" data-suffix="+">0</div><div class="stat-label">// projects_deployed</div></div>
+  <div class="stat"><div class="stat-num" data-count="40" data-suffix="%">0</div><div class="stat-label">// traffic_growth</div></div>
+  <div class="stat"><div class="stat-num" data-count="3" data-suffix="">0</div><div class="stat-label">// companies_served</div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="section-header reveal">
+    <span class="section-tag">who_am_i</span>
+    <h2 class="section-title">SYSTEM PROFILE</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="terminal-box">
+        <div class="terminal-bar">
+          <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#555;margin-left:.5rem">zara@portfolio:~</span>
+        </div>
+        <div class="scan-line"></div>
+        <div class="terminal-content">
+          <div><span class="t-prompt">zara@dev:~$ </span><span class="t-cmd">whoami</span></div>
+          <div><span class="t-hi">Zara Batool</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">zara@dev:~$ </span><span class="t-cmd">cat profile.json</span></div>
+          <div><span class="t-out">{</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"role":</span> <span class="t-hi">"Full Stack Developer"</span>,</div>
+          <div><span class="t-out">&nbsp;&nbsp;"exp":</span> <span class="t-hi">"5+ years"</span>,</div>
+          <div><span class="t-out">&nbsp;&nbsp;"location":</span> <span class="t-hi">"Faisalabad, PK"</span>,</div>
+          <div><span class="t-out">&nbsp;&nbsp;"stack":</span> <span class="t-hi">["React","PHP","Laravel"]</span>,</div>
+          <div><span class="t-out">&nbsp;&nbsp;"status":</span> <span class="t-hi" style="color:#00ff41">"open_to_work"</span></div>
+          <div><span class="t-out">}</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">zara@dev:~$ </span><span class="t-cmd">_</span><span style="animation:blink .7s step-end infinite;color:var(--green)">█</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <p>Full Stack Web Developer and Computer Science graduate from Government College University Faisalabad. Expert in building responsive e-commerce platforms and secure admin panels.</p>
+      <p>Currently working as Full Stack Developer & Trainer at Virtual Solution Path — specializing in scalable solutions focused on performance and business growth.</p>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">// location</div><div class="info-val">Faisalabad, PK</div></div>
+        <div class="info-item"><div class="info-label">// contact</div><div class="info-val">zarabatool006161@gmail.com</div></div>
+        <div class="info-item"><div class="info-label">// phone</div><div class="info-val">+92 300 1900261</div></div>
+        <div class="info-item"><div class="info-label">// status</div><div class="info-val" style="color:var(--green)">● open_to_work</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-section">
+  <div class="section-header reveal">
+    <span class="section-tag">capabilities</span>
+    <h2 class="section-title">TECH STACK</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-cat">frontend</div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>React / Vite</span><span>90%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>Tailwind CSS</span><span>92%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="92"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>JavaScript</span><span>88%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="88"></div></div></div>
+      <div class="skill-tags"><span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span><span class="skill-tag">Bootstrap</span></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-cat">backend</div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>PHP / Laravel</span><span>88%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="88"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>MySQL</span><span>85%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="85"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>REST APIs</span><span>82%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="82"></div></div></div>
+      <div class="skill-tags"><span class="skill-tag">Admin Panels</span><span class="skill-tag">RBAC</span></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-cat">tools</div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>Git / GitHub</span><span>90%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>SEO</span><span>80%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>Figma</span><span>75%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="75"></div></div></div>
+      <div class="skill-tags"><span class="skill-tag">cPanel</span><span class="skill-tag">FTP</span></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-cat">specialty</div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>E-Commerce</span><span>95%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="95"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>Web Training</span><span>92%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="92"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-label"><span>Responsive Design</span><span>95%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="95"></div></div></div>
+      <div class="skill-tags"><span class="skill-tag">Dashboards</span><span class="skill-tag">Code Reviews</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="exp-section">
+  <div class="section-header reveal">
+    <span class="section-tag">work_history</span>
+    <h2 class="section-title">EXPERIENCE LOG</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="exp-timeline">
+    <div class="exp-item">
+      <div class="exp-corner">[ CURRENT ]</div>
+      <div class="exp-period">// 2025-12 → PRESENT</div>
+      <div class="exp-role">FULL STACK DEVELOPER</div>
+      <div class="exp-company">Virtual Solutions Path — Faisalabad</div>
+      <ul class="exp-points">
+        <li>Mentoring students in full-stack web development: HTML, CSS, JS, React, Tailwind, PHP, MySQL</li>
+        <li>Guiding complex project development including e-commerce platforms and business websites</li>
+        <li>Leading technical architecture and project planning sessions</li>
+      </ul>
+    </div>
+    <div class="exp-item">
+      <div class="exp-corner">[ 2024–2025 ]</div>
+      <div class="exp-period">// 2024-05 → 2025-12</div>
+      <div class="exp-role">FULL STACK DEVELOPER</div>
+      <div class="exp-company">Orbit Counsels — Punjab, Pakistan</div>
+      <ul class="exp-points">
+        <li>Built and deployed 5+ e-commerce platforms with scalable backend systems</li>
+        <li>Developed secure admin dashboards with role-based access and dynamic reporting</li>
+        <li>Increased client traffic by 40% through strategic SEO implementation</li>
+        <li>Maintained Git version control and conducted rigorous code reviews</li>
+      </ul>
+    </div>
+    <div class="exp-item">
+      <div class="exp-corner">[ 2022–2023 ]</div>
+      <div class="exp-period">// 2022-04 → 2023-04</div>
+      <div class="exp-role">FRONTEND DEVELOPER</div>
+      <div class="exp-company">Virtual Solutions Path — Punjab, Pakistan</div>
+      <ul class="exp-points">
+        <li>Developed 10+ portfolio and business websites with polished responsive designs</li>
+        <li>Translated Figma files ensuring accessibility and cross-browser compatibility</li>
+        <li>Deployed via cPanel/FTP and onboarded clients independently</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="projects-section">
+  <div class="section-header reveal">
+    <span class="section-tag">deployments</span>
+    <h2 class="section-title">PROJECT FILES</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-hover-line"></div>
+      <div class="project-img" style="background:#020f02">🛒</div>
+      <div class="project-body">
+        <div class="project-tags"><span class="project-tag">PHP</span><span class="project-tag">Laravel</span><span class="project-tag">MySQL</span></div>
+        <div class="project-title">E_COMMERCE.EXE</div>
+        <p class="project-desc">Full-featured online store with scalable backend, product management, order processing, and secure payment integration.</p>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-hover-line"></div>
+      <div class="project-img" style="background:#020f02">⚙️</div>
+      <div class="project-body">
+        <div class="project-tags"><span class="project-tag">React</span><span class="project-tag">Tailwind</span><span class="project-tag">PHP</span></div>
+        <div class="project-title">ADMIN_PANEL.SH</div>
+        <p class="project-desc">Secure multi-role admin dashboard with dynamic reporting, user management, and real-time analytics for enterprise clients.</p>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-hover-line"></div>
+      <div class="project-img" style="background:#020f02">📈</div>
+      <div class="project-body">
+        <div class="project-tags"><span class="project-tag">SEO</span><span class="project-tag">Bootstrap</span><span class="project-tag">MySQL</span></div>
+        <div class="project-title">BUSINESS_WEB.PKG</div>
+        <p class="project-desc">SEO-optimised business websites that drove 40% traffic increase — built for performance, speed, and conversion.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CV SECTION -->
+<div class="cv-section">
+  <div class="cv-title reveal">[ ACCESS CV ]</div>
+  <div class="cv-sub reveal">// download full credentials — authorized personnel only</div>
+  <a href="#" class="cv-big-btn reveal" id="mainCv">
+    <span>⬇</span> DOWNLOAD_CV.PDF
+  </a>
+</div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-wrapper">
+    <div class="section-header reveal">
+      <span class="section-tag">establish_connection</span>
+      <h2 class="section-title">OPEN CHANNEL</h2>
+      <div class="section-line"></div>
+    </div>
+    <p class="contact-desc reveal">// ready to collaborate on your next project<br>// drop a message to initiate handshake</p>
+    <div class="contact-links reveal">
+      <a href="mailto:zarabatool006161@gmail.com" class="contact-link">
+        <span class="contact-icon">✉</span> zarabatool006161@gmail.com
+      </a>
+      <a href="tel:+923001900261" class="contact-link">
+        <span class="contact-icon">☎</span> +92 300 1900261
+      </a>
+      <a href="https://www.linkedin.com/in/zarabatool-1a3556373" target="_blank" class="contact-link">
+        <span class="contact-icon">in</span> linkedin://zarabatool
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">© 2025 zara_batool — all_rights_reserved</div>
+  <div class="footer-right">crafted with <span>♥</span> in faisalabad.pk</div>
+</footer>
+
+<script>
+// MATRIX RAIN
+const canvas=document.getElementById('matrix');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+const cols=Math.floor(canvas.width/16);
+const drops=Array(cols).fill(1);
+const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF<>{}[]|/\\';
+function drawMatrix(){
+  ctx.fillStyle='rgba(0,0,0,0.04)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#00ff41';
+  ctx.font='14px Share Tech Mono';
+  drops.forEach((y,i)=>{
+    const c=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillStyle=y===1?'#fff':(Math.random()>.97?'#00ffff':'#00ff41');
+    ctx.fillText(c,i*16,y*16);
+    if(y*16>canvas.height&&Math.random()>.97)drops[i]=0;
+    drops[i]++;
+  });
+}
+setInterval(drawMatrix,45);
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight});
+
+// CUSTOM CURSOR
+const cursor=document.getElementById('cursor');
+const trail=document.getElementById('trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+setInterval(()=>{tx+=(mx-tx)*.15;ty+=(my-ty)*.15;trail.style.left=tx+'px';trail.style.top=ty+'px'},16);
+document.querySelectorAll('a,button,.btn-hack,.nav-cv-btn,.cv-big-btn').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2.5)';cursor.style.borderColor='#00ffff'});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';cursor.style.borderColor='var(--green)'});
+});
+
+// TYPEWRITER
+const phrases=['> Building scalable web apps...','> Designing admin dashboards...','> Training the next generation...','> Crafting e-commerce solutions...','> Optimizing for performance...'];
+let pi=0,ci=0,deleting=false;
+function type(){
+  const p=phrases[pi];
+  const el=document.getElementById('typewriter');
+  if(!deleting){el.textContent=p.slice(0,++ci);if(ci===p.length){deleting=true;setTimeout(type,1800);return}}
+  else{el.textContent=p.slice(0,--ci);if(ci===0){deleting=false;pi=(pi+1)%phrases.length}}
+  setTimeout(type,deleting?40:80);
+}
+setTimeout(type,2000);
+
+// COUNTERS
+let counted=false;
+function animateCounters(){
+  if(counted)return;counted=true;
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target=+el.getAttribute('data-count');
+    const suffix=el.getAttribute('data-suffix')||'';
+    let current=0;const step=target/60;
+    const t=setInterval(()=>{
+      current+=step;if(current>=target){current=target;clearInterval(t)}
+      el.textContent=Math.floor(current)+suffix;
+    },25);
+  });
+}
+
+// SKILL BAR ANIMATION
+const skillObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-bar-fill').forEach(bar=>{
+        bar.style.width=bar.getAttribute('data-width')+'%';
+      });
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.skill-card').forEach(c=>skillObserver.observe(c));
+
+// INTERSECTION OBSERVER
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.12});
+document.querySelectorAll('.reveal,.exp-item').forEach(el=>observer.observe(el));
+new IntersectionObserver(entries=>{if(entries[0].isIntersecting)animateCounters()},{threshold:.3}).observe(document.querySelector('.stats-bar'));
+
+// ACTIVE NAV
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-150)cur=s.id});
+  navLinks.forEach(a=>{a.style.color=a.getAttribute('href').slice(1)===cur?'var(--green)':'var(--muted)'});
+});
+
+// CV DOWNLOAD
+function downloadCV(){
+  const cv=`ZARA BATOOL — CURRICULUM VITAE
+=====================================
+Full Stack Web Developer | React, Tailwind & Vite | PHP & MySQL | Web Dev Instructor
+
+CONTACT
+-------
+Location : Faisalabad, Punjab, Pakistan
+Phone    : +92 300 1900261
+Email    : zarabatool006161@gmail.com
+LinkedIn : linkedin.com/in/zarabatool-1a3556373
+
+SUMMARY
+-------
+Full Stack Web Developer and BSc Computer Science graduate (GCU Faisalabad).
+Expert in responsive e-commerce platforms, secure admin panels, and modern web apps.
+Currently Full Stack Developer & Trainer at Virtual Solution Path.
+
+EXPERIENCE
+----------
+Full Stack Web Developer — Virtual Solutions Path | Dec 2025–Present
+• Mentoring students in HTML, CSS, JS, React, Tailwind, PHP, MySQL
+• Guiding e-commerce and business website development projects
+
+Full Stack Web Developer — Orbit Counsels | May 2024–Dec 2025
+• Built 5+ e-commerce platforms with scalable backends
+• Secured admin dashboards with RBAC and dynamic reporting
+• Boosted client traffic by 40% via SEO
+
+Front-End Developer — Virtual Solutions Path | Apr 2022–Apr 2023
+• Delivered 10+ responsive portfolio and business websites
+• Translated Figma designs to accessible, cross-browser-compatible sites
+
+SKILLS
+------
+Frontend  : React, Vite, HTML5, CSS3, JavaScript, Tailwind, Bootstrap
+Backend   : PHP, Laravel, MySQL, REST APIs, Role-Based Access
+Tools     : Git, GitHub, cPanel, FTP, Figma, SEO
+Specialty : E-Commerce, Admin Dashboards, Web Training, Code Reviews
+
+EDUCATION
+---------
+BSc Computer Science — GCU Faisalabad (2020–2024)
+BEd — Allama Iqbal Open University (2025–2027, In Progress)
+`;
+  const blob=new Blob([cv],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='Zara_Batool_CV.txt';a.click();
+  URL.revokeObjectURL(url);
+}
+['navCv','heroCv','mainCv'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{e.preventDefault();downloadCV()});
+});
+</script>
+</body>
+</html>
